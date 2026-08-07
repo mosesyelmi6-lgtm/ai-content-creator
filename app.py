@@ -1,23 +1,46 @@
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# Get your API key securely from an environment variable
+api_key = os.environ.get("OPENAI_API_KEY")
+
+if not api_key:
+    print("❌ OPENAI_API_KEY is not set.")
+    print("Add your API key as an environment variable before running the app.")
+    exit()
+
+client = OpenAI(api_key=api_key)
+
 
 def generate_content(topic, content_type):
     prompt = f"""
-Create engaging social media content about: {topic}
+You are an expert social media content creator.
 
+Create engaging content about:
+Topic: {topic}
 Content type: {content_type}
 
-Give me:
-1. A viral hook
-2. A short script
-3. A caption
-4. A title
-5. 10 relevant hashtags
-6. A call to action
+Return the following:
 
-Make the content engaging, clear, and suitable for TikTok.
+🔥 HOOK:
+Create a strong attention-grabbing opening.
+
+🎬 SCRIPT:
+Write a short, engaging social-media video script.
+
+📝 CAPTION:
+Write a compelling caption.
+
+📌 TITLE:
+Create a catchy title.
+
+#️⃣ HASHTAGS:
+Give 10 relevant hashtags.
+
+🚀 CALL TO ACTION:
+Give a strong call to action.
+
+Keep everything original, engaging, and suitable for TikTok.
 """
 
     response = client.responses.create(
@@ -28,16 +51,21 @@ Make the content engaging, clear, and suitable for TikTok.
     return response.output_text
 
 
+print("=" * 50)
 print("🤖 AI CONTENT CREATOR")
-print("=" * 40)
+print("=" * 50)
 
-topic = input("Enter your content topic: ")
-content_type = input("Enter content type (motivation, entertainment, education, etc.): ")
+topic = input("\nEnter your content topic: ")
+content_type = input(
+    "Enter content type (motivation, entertainment, education, etc.): "
+)
 
-print("\n⏳ Generating your content...\n")
+print("\n⏳ Generating content...\n")
 
 try:
-    result = generate_content(topic, content_type)
-    print(result)
+    content = generate_content(topic, content_type)
+    print(content)
+
 except Exception as error:
-    print("❌ Error:", error)
+    print("\n❌ Something went wrong:")
+    print(error)
